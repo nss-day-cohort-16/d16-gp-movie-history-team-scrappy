@@ -21,7 +21,7 @@ function getMovies(movie) {
 });	
 }
 
-getMovies("matrix")
+getMovies()
 .then((movieData) => {
 	console.log("movieData", movieData);
 	return movieData;
@@ -40,7 +40,7 @@ function getFullMovies(imdbID) {
 	});
 
 }
-getFullMovies("tt0113277")
+getFullMovies()
 .then((movieData) => {
 	return movieData;
 });
