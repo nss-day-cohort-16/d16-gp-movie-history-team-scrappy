@@ -1,0 +1,21 @@
+@import url('/node_modules/bootstrap/dist/css/bootstrap.min.css'); // version 3.3.7
+
+$background: white;
+
+body {
+    background: $background;
+}
+
+#film {
+  width: 300px;
+}
+
+#home {
+  padding-top: 30px;
+}
+
+#home h1 {
+  padding-top: 30px;
+}
+
+// .active causes tab in nav to be highlighted
