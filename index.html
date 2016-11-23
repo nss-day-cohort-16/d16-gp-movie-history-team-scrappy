@@ -1,103 +1,70 @@
 <html>
-    <head>
+  <head>
         <title>Movie History</title>
         <meta charset="utf-8">
-    </head>
-    <body>
+  </head>
+  <body>
+    <div class="row">
+      <div class="col-sm-9">
+    
+    <div class="row">
+      <div class="col-xs-6 col-sm-4">
+       Search:<input type="text" id = "nav-Search" class="form-control" placeholder="Text input">
+      </div>
+    
+      <div class="col-xs-6 col-sm-4">
+       <p><a id ="nav-LogIn" class ="hide-out">Log In /</a> <a id= "nav-LogOut" class ="hide-out">Log Out</a></p>
+    
+      </div>
+     </div>
+     </div>
+    </div>
 
-      <!-- Navbar -->
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Movie History</a>
-          </div>
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <!-- Search -->
-              <form class="navbar-form navbar-left">
-                <div class="form-group">
-                  <!-- <a href="#search-omdb">Find New Movies</a> -->
-                  <!-- <a href="#search-fb">Search Your Movies</a> -->
-                  <input id="nav-Search" type="text" class="form-control" placeholder="Find New Movies">
-                </div>
-                <button id="search-omdb" type="submit" class="btn btn-default">Search</button>
-              </form>
-<!-- What's the initial view? -->
-              <li><a id="landing-page" href="#">Movies to Watch</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a id="nav-SignUp" href="#">Sign Up</a></li>
-              <li><a id="nav-LogIn" class="hide" href="#">Log In</a></li>
-              <li><a id="nav-LogOut" class="hide" href="#">Log Out</a></li>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-      </nav>
+    <div>
+    <h1>Movie History</h1>
+    </div>            
+
 
       <!-- Home -->
-      <div id="section-Home" class="row container">
-        <div class="col-sm-10 col-sm-offset-1">
-          <div class="form-group">
-              <span class="col-sm-6 text-left pull-left">
-              <!-- <button class="btn btn-default">Movies to Watch</button> -->
-              <a id="show-tracked" href="#toWatchInject">Movies to Watch</a></span>
-              <span class="col-sm-6 text-right">
-              <!-- <button class="btn btn-default">Movies Already Watched</button> -->
-              <a id="show-watched" href="#watchedInject">Movies Already Watched</a></span>
-            <input id="body-Search" type="text" class="form-control" placeholder="Search Unwatched Movies">
-          </div>
-          <button id="search-fb" type="submit" class="btn btn-default">Search</button>
-        </div>
-        <div class="col-sm-6 text-right">
-          <img id="film" src="images/film.svg" alt="movie reel"/>
-        </div>
-        <div class="col-sm-4">
-          <h1>Movie History</h1>
-          <div id="homeInject">
+    <div id="section-Home" class="row-container">
 
-          </div>
-        </div>
+    <div class="btn-group btn-toggle" data-toggle="buttons">
+    <label class="btn btn-default">
+    <input id ="show-untracked" type="radio" name="field" value="YES">
+               Show Untracked
+    </label>
+    <label class="btn btn-default">
+    <input id="show-unwatched" type="radio" name="field" value="YES">
+               Show Unwatched
+    </label>
+    <label class="btn btn-primary active">
+    <input id="show-watched" type="radio" checked="checked" name="field" value="YES"> 
+                Show Watched
+    </label>
+    <label class="btn btn-default">
+    <input  id="show-favorites" type="radio" name="field" value="YES">
+                Favorites
+    </label>
+      
+    </div>   
+
+
+    </div> 
+
+      <div id="homeInject">
+    
+     
       </div>
+      <p><a id="add-toWatch">Add to Watchlist</a></p>
 
-      <!-- Search -->
-      <div id="section-Search" class="row container hide">
-        <div class="col-md-12">
-          <h1>Search</h1>
-          <div id="searchInject"></div>
-        </div>
-      </div>
+    
+    
 
-      <!-- Movies To Watch -->
-      <div id="section-ToWatch" class="row container hide">
-        <div class="col-md-12">
-          <h1>Movies To Watch</h1>
-          <div id="toWatchInject"></div>
-        </div>
-      </div>
+   
+    
 
-      <!-- Movies Watched -->
-      <div id="section-Watched" class="row container hide">
-        <div class="col-md-12">
-          <h1>Movies Already Watched</h1>
-          <div id="watchedInject"></div>
-        </div>
-      </div>
+    <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
 
-      <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
-
-    </body>
+</body>
 </html>
 
-<!-- 
-Add:
-  toggles for various views
-  new sections for the new views (search, tracked, watched, favorites)
- -->
