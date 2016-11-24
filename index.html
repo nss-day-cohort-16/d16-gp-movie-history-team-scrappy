@@ -4,43 +4,53 @@
         <meta charset="utf-8">
   </head>
   <body>
-    <div class="row">
-      <div class="col-sm-9">
-    
-    <div class="row">
-      <div class="col-xs-6 col-sm-4">
-       Search:<input type="text" id = "nav-Search" class="form-control" placeholder="Text input">
-      </div>
-    
-      <div class="col-xs-6 col-sm-4">
-       <p><a id ="nav-LogIn" class ="hide-out">Log In /</a> <a id= "nav-LogOut" class ="hide-out">Log Out</a></p>
-    
-      </div>
-     </div>
-     </div>
-    </div>
+  <!-- Navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <div class="row">
+              <div class="col-sm-9">
 
+            <div class="row">
+              <div class="col-xs-6 col-sm-4">
+               Search:<input type="text" id="nav-Search" class="form-control" placeholder="Text input">
+              </div>
+
+              <div class="col-xs-6 col-sm-4">
+               <p><a id ="nav-LogIn" class ="hide-out">Log In /</a> <a id= "nav-LogOut" class ="hide-out">Log Out</a></p>
+
+              </div>
+             </div>
+             </div>
+            </div>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>      
+
+      
     <div>
     <h1>Movie History</h1>
     </div>            
-
-
-      <!-- Home -->
+     
     <div id="section-Home" class="row-container">
-
+      
     <div class="btn-group btn-toggle" data-toggle="buttons">
     <label class="btn btn-default">
     <input id ="show-untracked" type="radio" name="field" value="YES">
                Show Untracked
     </label>
+    
     <label class="btn btn-default">
     <input id="show-unwatched" type="radio" name="field" value="YES">
                Show Unwatched
     </label>
+    
     <label class="btn btn-primary active">
     <input id="show-watched" type="radio" checked="checked" name="field" value="YES"> 
                 Show Watched
     </label>
+    
     <label class="btn btn-default">
     <input  id="show-favorites" type="radio" name="field" value="YES">
                 Favorites
@@ -55,15 +65,40 @@
     
      
       </div>
+
+
+      <!-- Search -->
+      <div id="section-Search" class="row container hide">
+        <div class="col-md-12">
+          <h1>Search</h1>
+          <div id="searchInject"></div>
+        </div>
+      </div>
+
+      <!-- Movies To Watch -->
+      <div id="section-ToWatch" class="row container hide">
+        <div class="col-md-12">
+          <h1>Movies To Watch</h1>
+          <div id="toWatchInject"></div>
+        </div>
+      </div>
+
+      <!-- Movies Watched -->
+      <div id="section-Watched" class="row container hide">
+        <div class="col-md-12">
+          <h1>Movies Already Watched</h1>
+          <div id="watchedInject"></div>
+        </div>
+      </div>
       <p><a id="add-toWatch">Add to Watchlist</a></p>
 
     
+  <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
     
 
    
     
 
-    <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
 
 </body>
 </html>
