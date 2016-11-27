@@ -1,12 +1,10 @@
 <html>
-    <head>
+  <head>
         <title>Movie History</title>
         <meta charset="utf-8">
-    </head>
-    <body>
-
-      <!-- Navbar -->
-      <nav class="navbar navbar-default">
+  </head>
+  <body>
+ <nav class="navbar navbar-default">
         <div class="container-fluid">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -24,48 +22,61 @@
               <!-- Search -->
               <form class="navbar-form navbar-left">
                 <div class="form-group">
-                  <!-- <a href="#search-omdb">Find New Movies</a> -->
-                  <!-- <a href="#search-fb">Search Your Movies</a> -->
-                  <input id="nav-Search" type="text" class="form-control" placeholder="Find New Movies">
+                 
+                  <input id="nav-Search" type="text" class="form-control" placeholder="Search OMDb and your tracked movies...">
                 </div>
-                <button id="search-omdb" type="submit" class="btn btn-default">Search</button>
+                
               </form>
 <!-- What's the initial view? -->
-              <li><a id="landing-page" href="#">Movies to Watch</a></li>
+              
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a id="nav-SignUp" href="#">Sign Up</a></li>
-              <li><a id="nav-LogIn" class="hide" href="#">Log In</a></li>
-              <li><a id="nav-LogOut" class="hide" href="#">Log Out</a></li>
+              <li><a id="nav-SignUp" href="#">Register</a></li>
+              <li><a id="nav-LogIn" class="" href="#">Log In</a></li>
+              <li><a id="nav-LogOut" class="" href="#">Log Out</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
       </nav>
 
-      <!-- Home -->
-      <div id="section-Home" class="row container">
-        <div class="col-sm-10 col-sm-offset-1">
-          <div class="form-group">
-              <span class="col-sm-6 text-left pull-left">
-              <!-- <button class="btn btn-default">Movies to Watch</button> -->
-              <a id="show-tracked" href="#toWatchInject">Movies to Watch</a></span>
-              <span class="col-sm-6 text-right">
-              <!-- <button class="btn btn-default">Movies Already Watched</button> -->
-              <a id="show-watched" href="#watchedInject">Movies Already Watched</a></span>
-            <input id="body-Search" type="text" class="form-control" placeholder="Search Unwatched Movies">
-          </div>
-          <button id="search-fb" type="submit" class="btn btn-default">Search</button>
-        </div>
-        <div class="col-sm-6 text-right">
-          <img id="film" src="images/film.svg" alt="movie reel"/>
-        </div>
-        <div class="col-sm-4">
-          <h1>Movie History</h1>
-          <div id="homeInject">
+      
+    <div>
+    <h1>Movie History</h1>
+    </div>            
+     
+    <div id="section-Home" class="row-container">
+      
+    <div class="btn-group btn-toggle" data-toggle="buttons">
+    <label class="btn btn-default">
+    <input id ="show-untracked" type="radio" name="field" value="YES">
+               Show Untracked
+    </label>
+    
+    <label class="btn btn-default">
+    <input id="show-unwatched" type="radio" name="field" value="YES">
+               Show Unwatched
+    </label>
+    
+    <label class="btn btn-primary active">
+    <input id="show-watched" type="radio" checked="checked" name="field" value="YES"> 
+                Show Watched
+    </label>
+    
+    <label class="btn btn-default">
+    <input  id="show-favorites" type="radio" name="field" value="YES">
+                Favorites
+    </label>
+      
+    </div>   
 
-          </div>
-        </div>
+
+    </div> 
+
+      <div id="homeInject">
+    
+     
       </div>
+
 
       <!-- Search -->
       <div id="section-Search" class="row container hide">
@@ -90,14 +101,16 @@
           <div id="watchedInject"></div>
         </div>
       </div>
+      <p><a id="add-toWatch">Add to Watchlist</a></p>
 
-      <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
+    
+  <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
+    
 
-    </body>
+   
+    
+
+
+</body>
 </html>
 
-<!-- 
-Add:
-  toggles for various views
-  new sections for the new views (search, tracked, watched, favorites)
- -->
