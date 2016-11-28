@@ -6,10 +6,10 @@ let Firebase = require("./firebase-interactions");
 let User = require("./user");
 let Render = require("./view");
 let searchResultAll = {Search: []},
+    searchResultTracked = {Search: []},
     userMovies = {Search: []},
     resultOMDb = {Search: []},
     resultUntracked = {Search: []},
-    searchResultTracked = {Search: []},
     location = '',
     searchString = '';
 
@@ -80,15 +80,18 @@ let logOut = () => {
 };
 
 let landingPage = (uid) => {
-  Firebase.getMovies(uid)
-  .then(function(movieData){
-    var idArr = Object.keys(movieData);
-    idArr.forEach(function (key) {
-      movieData[key].movieId = key;
-      userMovies.Search.push(movieData[key]);
+  if (uid) {
+    Firebase.getMovies(uid)
+    .then(function(movieData){
+      var idArr = Object.keys(movieData);
+      idArr.forEach(function (key) {
+        movieData[key].movieId = key;
+        userMovies.Search.push(movieData[key]);
+      });
     });
-  });
-  // userMovies.Search = tempObj.Movies;
+  } else {
+    Render.loadPage(false);
+  }
 };
 
 // Check if someone is logged in (calls loadPage with argument yes or no)
@@ -97,7 +100,10 @@ Render.loadPage(loggedUser());
 // search(input): use getUser() then call Firebase.searchFirebase(input) if applicable and OpenMovies.getMovies(input), save input, and call signIn something, then call compare(), renderMovies(object, search)
 let searchAll = function(string){
   location = 'search';
-  resultOMDb = OpenMovie.getMovies(string);
+  OpenMovie.getMovies(string)
+  .then((movieData) => {
+    resultOMDb = movieData;
+  });
   searchString = string.toLowerCase();
   if (loggedUser()){
     // searchResultTracked = Firebase.searchFirebase(string);
@@ -209,24 +215,7 @@ let updateMovie = (movieId, rating) => {
   // Render.renderCard(newMovie);
 };
 
-// addToWatchList(movieId) push new object to firebase will call renderCard(object),
-// REDUNDANT?
-// let addToWatchList = (obj, movieId) => {
-// };
-
-let ModeltestFunction = () => "I was created in the Model";
-
-let test2 = Render.viewTestFunction();
-console.log("From Model:", test2);
-
-let test3 = Firebase.firebaseTestFunction();
-console.log("From Model:", test3);
-
-let test4 = OpenMovie.openMovieTestFunction();
-console.log("From Model:", test4);
-
-module.exports = {ModeltestFunction,
-                  searchAll,
+module.exports = {searchAll,
                   showUntracked,
                   showWatched,
                   showUnwatched,
