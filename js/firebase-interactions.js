@@ -15,7 +15,7 @@ let firebaseTestFunction = () => "I was created in the Firebase file";
 function getMovies(user) {
 	return new Promise(function(resolve, reject) {
 		$.ajax ({
-			url: `https://scrappy-eb326.firebaseapp.com/movies.json?orderBy="uid"&equalTo="${user}"`
+			url: `https://scrappy-eb326.firebaseio.com/movies.json?orderBy="uid"&equalTo="${user}	"`
 		}).done (function(movieData) {
 			resolve(movieData);
 		});
@@ -24,9 +24,11 @@ function getMovies(user) {
 
 // adds a new movie, in the form of an object, to the collection
 function addMovie(movieFormObj) {
+	console.log("movie object before promise", movieFormObj);
 	return new Promise(function(resolve, reject) {
+		console.log("movie object after promise", movieFormObj);
 		$.ajax ({
-			url: 'https://scrappy-eb326.firebaseapp.com/movies.json',
+			url: 'https://scrappy-eb326.firebaseio.com/movies.json',
 			type: 'POST',
 			data: JSON.stringify(movieFormObj),
 			dataType: 'json'
@@ -41,7 +43,7 @@ function deleteMovie(movieId) {
 	console.log("delete Movie");
 	return new Promise(function(resolve, reject) {
 		$.ajax ({
-			url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
+			url: `https://scrappy-eb326.firebaseio.com/movies/${movieId}.json`,
 			method: "DELETE"
 		}).done(function() {
 			resolve();
@@ -54,7 +56,7 @@ function deleteMovie(movieId) {
 function getMovie(movieId) {
 	return new Promise(function(resolve, reject) {
 		$.ajax ({
-			url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`
+			url: `https://scrappy-eb326.firebaseio.com/movies/${movieId}.json`
 		}).done(function(movieData) {
 			resolve(movieData);
 		}).fail(function(error){
@@ -67,7 +69,7 @@ function getMovie(movieId) {
 function editMovie(movieFormObj, movieId) {
 	return new Promise(function(resolve, reject) {
 		$.ajax({
-			url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
+			url: `https://scrappy-eb326.firebaseio.com/movies/${movieId}.json`,
 			type: 'PUT',
 			data: JSON.stringify(movieFormObj)
 		}).done(function(data) {

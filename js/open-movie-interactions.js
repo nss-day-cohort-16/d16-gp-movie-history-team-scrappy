@@ -12,13 +12,13 @@ function getMovies(movie) {
 			url: `http://www.omdbapi.com/?s=${movie}&type=movie`,
 		}).done (function(movieData){
 			resolve(movieData);
-		
+
 		// }).then((movieData) => {
 		// 	return movieData;
 		// });
 
 	});
-});	
+});
 }
 
 
