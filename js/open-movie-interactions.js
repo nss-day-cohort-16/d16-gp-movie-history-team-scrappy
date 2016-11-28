@@ -21,14 +21,7 @@ function getMovies(movie) {
 });	
 }
 
-getMovies()
-.then((movieData) => {
-	console.log("movieData", movieData);
-	return movieData;
-});
-//this is how we tested data
-// //let test = getMovies("matrix");
-// console.log("test",test );
+
 
 function getFullMovies(imdbID) {
 	return new Promise(function(resolve, reject) {
@@ -40,15 +33,6 @@ function getFullMovies(imdbID) {
 	});
 
 }
-getFullMovies()
-.then((movieData) => {
-	return movieData;
-});
-
-
-
-// let test2 = getFullMovies("tt0113277");
-// console.log("test2", test2 );
 
 
 module.exports = {getMovies, getFullMovies};
