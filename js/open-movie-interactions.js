@@ -24,13 +24,11 @@ function getMovies(movie) {
 
 
 function getFullMovies(imdbID) {
-	console.log("id in getFullMovies:", imdbID);
 	return new Promise(function(resolve, reject) {
 		$.ajax ({
 			url: `http://www.omdbapi.com/?i=${imdbID}`
 		}).done (function(movieData){
 			resolve(movieData);
-			console.log("movieData:", movieData);
 		});
 	});
 

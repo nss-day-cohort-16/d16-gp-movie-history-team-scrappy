@@ -2,6 +2,7 @@
 
 // Requires
 require('jquery');
+let Model = require("./model");
 
     // Pages elements to toggle with "hide" class
 let sectionStart     = $("#section-Start"),
@@ -36,12 +37,28 @@ let renderMovies = (movies, location) => {
       for (let i = 0; i < movies.Search.length; i++) {
         content += `
           <div id="movie-${movies.Search[i].imdbID}" class="movie col-sm-4 card">
-            <a id="delete-${movies.Search[i].imdbID}">Delete Card</a><br/>
+            <a id="delete-${movies.Search[i].imdbID}" href="#">Delete Card</a><br/>
             <img class="movieImage" src="${movies.Search[i].Poster}"/><br/>
             <a id="add-${movies.Search[i].imdbID}">Add to Watchlist</a>
           </div>
         `;
+
+        // Event Listeners for each add button
+        /*jshint loopfunc: true */
+        // let target = `"#add-${movies.Search[i].imdbID}"`;
+
+
+
+
       }
+        // $(document).on( "click", "#add-tt0072890", function() {
+        //   console.log("you clicked the first dog movie");
+        //   Model.addMovie("tt0072890");
+        // });
+
+
+
+
       searchInject.append(content);
       break;
     case 'untracked':
@@ -134,6 +151,7 @@ function hideViewStates() {
 // Remove helper text
 function removeHelpText() { sectionStart.addClass("hide"); }
 
+
 function bundleCard() {
 
 }
@@ -150,4 +168,3 @@ let hideMovie = () => "I hide a movie";
 let viewTestFunction = () => "I was created in the View";
 
 module.exports = {loadPage, renderMovies, hideMovie, viewTestFunction};
-
