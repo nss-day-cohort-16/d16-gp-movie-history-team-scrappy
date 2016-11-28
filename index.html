@@ -4,105 +4,105 @@
         <meta charset="utf-8">
   </head>
   <body>
- <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Movie History</a>
-          </div>
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <!-- Search -->
-              <form class="navbar-form navbar-left">
-                <div class="form-group">
-                 
-                  <input id="nav-Search" type="text" class="form-control" placeholder="Search OMDb and your tracked movies...">
-                </div>
-                
-              </form>
-<!-- What's the initial view? -->
-              
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a id="nav-LogIn" class="" href="#">Log In</a></li>
-              <li><a id="nav-LogOut" class="" href="#">Log Out</a></li>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-      </nav>
 
-      
-    <div>
-    <h1 id="breadcrumbs">Movie History</h1>
-    </div>            
-     
-    <div id="section-Home" class="row-container">
-      
-    <div class="btn-group btn-toggle" data-toggle="buttons">
-    <label class="btn btn-default">
-    <input id ="show-untracked" type="radio" name="field" value="YES">
-               Show Untracked
-    </label>
-    
-    <label class="btn btn-default">
-    <input id="show-unwatched" type="radio" name="field" value="YES">
-               Show Unwatched
-    </label>
-    
-    <label class="btn btn-primary active">
-    <input id="show-watched" type="radio" checked="checked" name="field" value="YES"> 
-                Show Watched
-    </label>
-    
-    <label class="btn btn-default">
-    <input  id="show-favorites" type="radio" name="field" value="YES">
-                Favorites
-    </label>
-      
-    </div>   
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Movie History</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <!-- Search -->
+            <form class="navbar-form navbar-left">
+              <div class="form-group">
+                <input id="nav-Search" type="text" class="form-control" placeholder="Search OMDb and your tracked movies...">
+              </div>
+            </form>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="nav-LogIn" class="" href="#">Log In</a></li>
+            <li><a id="nav-LogOut" class="" href="#">Log Out</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
 
+    <!-- Help text to show on load -->
+     <div id="section-Start" class="row container">
+       <div class="col-sm-6 text-right">
+         <img id="film" src="images/film.svg" alt="movie reel"/>
+       </div>
+       <div class="col-sm-4">
+         <h1>Movie History</h1>
+          <p>To get started tracking movies you'd like to watch, use the search field above and press enter to submit your search</p>
+       </div>
+     </div>
 
-    </div>   
+    <div id="section-SubNav" class="row container">
+      <div class="btn-group btn-toggle" data-toggle="buttons">
+        <!-- Breadcrumbs -->
+        <h3 id="breadcrumbs">Movie History</h3>
+
+        <label class="btn btn-default">
+        <input id ="show-untracked" type="radio" name="field" value="YES">Show Untracked</label>
+
+        <label class="btn btn-default">
+        <input id="show-unwatched" type="radio" name="field" value="YES">Show Unwatched</label>
+
+        <label class="btn btn-default">
+        <input id="show-watched" type="radio" name="field" value="YES">Show Watched</label>
+
+        <label class="btn btn-default">
+        <input  id="show-favorites" type="radio" name="field" value="YES">Favorites</label>
+
+      </div>
+    </div>
+
       <!-- Search -->
+      <div id="section-Search" class="row container hide">
+        <div class="col-md-12">
+          <div id="searchInject"></div>
+        </div>
+      </div>
+
+      <!-- Untracked -->
       <div id="section-Untracked" class="row container hide">
         <div class="col-md-12">
-          <h1>Untracked Movies</h1>
           <div id="untrackedInject"></div>
         </div>
       </div>
 
-      <!-- Movies To Watch -->
-      <div id="section-ToWatch" class="row container hide">
+      <!-- Unwatched -->
+      <div id="section-Unwatched" class="row container hide">
         <div class="col-md-12">
-          <h1>Movies To Watch</h1>
-          <div id="toWatchInject"></div>
+          <div id="unwatchedInject"></div>
         </div>
       </div>
 
-      <!-- Movies Watched -->
-      <div id="section-Watched" class="row container hide">
+      <!-- Watched -->
+       <div id="section-Watched" class="row container hide">
         <div class="col-md-12">
-          <h1>Movies Already Watched</h1>
           <div id="watchedInject"></div>
         </div>
       </div>
 
+      <!-- Favorites -->
        <div id="section-Favorites" class="row container hide">
         <div class="col-md-12">
-          <h1>Favorites</h1>
           <div id="favoritesInject"></div>
         </div>
       </div>
-     
+
   <script type="text/javascript" src="dist/bundle.js" charset="utf-8"></script>
-    
+
 </body>
 </html>
 
