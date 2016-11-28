@@ -47,22 +47,71 @@
 	'use strict';
 
 	// Requires
-	__webpack_require__(1);
-	__webpack_require__(2);
-	let Model = __webpack_require__(6);
+	let fav = __webpack_require__(1);
+	let sass = __webpack_require__(2);
+	let model = __webpack_require__(6);
 
-	    // Input Elements
-	let navSearch      = $("#nav-Search"),
-	    navToWatch     = $("#nav-ToWatch"),
-	    navWatched     = $("#nav-Watched"),
-	    navSignUp      = $("#nav-SignUp"),
+	        // Input Elements
+	let navSearch   = $("#nav-Search"), //keypress event
+	    addToWatchList = $("#add-toWatch"),
 	    navLogIn       = $("#nav-LogIn"),
-	    navLogOut      = $("#nav-LogOut");
+	    navLogOut      = $("#nav-LogOut"),
+	    showUntracked  = $("#show-untracked"),
+	    showUnwatched  = $("#show-unwatched"),
+	    showWatched    = $("#show-watched"),
+	    showFavorites  = $("#show-favorites");
+	    console.log("it's working");
+	           
+	navLogIn.click(function(event) {
+	 console.log("you clicked the login button",event );
+	 model.logIn();
+	 
+	 });
+	navLogOut.click(function(event) {
+	console.log("you clicked the logout button",event );
+	model.logOut();
 
-	// Call needed functions in Model based on inputs
+	});
 
-	let test = Model.ModeltestFunction();
-	console.log("From Controller:", test);
+	navSearch.keypress(function(event) {
+	// console.log("you clicked the search keypress", event);
+	if(event.keyCode === 13) {
+
+	let searchResult = navSearch.val();
+	console.log("searchResult", searchResult);
+	model.searchAll(searchResult);
+	navSearch.val('');
+
+	}   
+	});
+
+
+	//listening to 4 toggle options
+	showUntracked.click(function(event) {
+	console.log("you clicked show untracked ",event );
+	model.showUntracked();
+	});
+
+	showUnwatched.click(function(event) {
+	console.log("you clicked show unwatched",event );
+
+	model.showUnwatched();
+	});
+	showWatched.click(function(event) {
+	console.log("you clicked show watched",event );
+
+	model.showWatched();
+	});
+
+	showFavorites.click(function(event) {
+	console.log("click event for showFavorites",event );
+
+	model.showFavorites();
+	});
+
+
+
+
 
 /***/ },
 /* 1 */
@@ -118,7 +167,7 @@
 	exports.push([module.id, "@import url(/node_modules/bootstrap/dist/css/bootstrap.min.css);", ""]);
 
 	// module
-	exports.push([module.id, "body {\n  background: white; }\n\n#film {\n  width: 300px; }\n\n#home {\n  padding-top: 30px; }\n\n#home h1 {\n  padding-top: 30px; }\n", ""]);
+	exports.push([module.id, "body {\n  background: white; }\n\n.row {\n  margin: 0 auto; }\n\n#film {\n  width: 75px; }\n\n#home {\n  padding-top: 30px; }\n\n#home h1 {\n  padding-top: 30px; }\n\n.movieImage {\n  max-width: 200px;\n  max-height: 250px; }\n\n.movie {\n  padding: 20px 0; }\n", ""]);
 
 	// exports
 
@@ -440,22 +489,230 @@
 	// Requires
 	let OpenMovie = __webpack_require__(7);
 	let Firebase = __webpack_require__(108);
-	let Render = __webpack_require__(109);
+	let User = __webpack_require__(114);
+	let Render = __webpack_require__(115);
+	let searchResultAll = {Search: []},
+	    searchResultTracked = {Search: []},
+	    userMovies = {Search: []},
+	    resultOMDb = {Search: []},
+	    resultUntracked = {Search: []},
+	    location = '',
+	    searchString = '';
 
 	// write functions that are called based on inputs in controller. They use view,
 
-	let ModeltestFunction = () => "I was created in the Model";
+	// compare(result1, result2) returns 1 json file of unique movies
+	let compare = (omdb, fb) => {
+	  let tempIds = [];
+	// Populate searchResultAll with fb results bc these are defaults
+	  searchResultAll.Search.concat(fb.Search); // Will need an edit for the return value of FB search
+	  for (let i = 0; i<fb.Search.length; i++){
+	    tempIds.push(fb.Search[i].imdbID); // Will need an edit for the return value of FB search
+	  }
+	// compare omdb search results to tracked imdbIDs
+	  for (let i = 0; i < omdb.Search.length; i++){
+	    if (tempIds.includes(omdb.Search[i].imdbID)){
+	      //skip it
+	    } else {
+	      resultUntracked.Search.push(omdb.Search[i]);
+	      searchResultAll.Search.unshift(omdb.Search[i]);
+	    }
+	  }
+	  return searchResultAll;
+	};
 
-	let test2 = Render.viewTestFunction();
-	console.log("From Model:", test2);
+	let checkLocation = function (str) {
+	  switch (str){
+	    case 'search':
+	      searchAll(searchString);
+	      break;
+	    case 'untracked':
+	      showUntracked();
+	      break;
+	    case 'unwatched':
+	      showUnwatched();
+	      break;
+	    case 'watched':
+	      showWatched();
+	      break;
+	    case 'favorites':
+	      showFavorites();
+	      break;
+	  }
+	};
 
-	let test3 = Firebase.firebaseTestFunction();
-	console.log("From Model:", test3);
+	let userLocation = function(str){
+	  location = str;
+	};
 
-	let test4 = OpenMovie.openMovieTestFunction();
-	console.log("From Model:", test4);
+	let loggedUser = () => {
+	  if (User.getUser() === null){
+	    return false;
+	  } else {
+	  return User.getUser();
+	  }
+	};
 
-	module.exports = {ModeltestFunction}; // logic functions for controllers
+	// Call getUser() on page load, then call LoadPage(loggedIn).
+	let logIn = () => {
+	  User.logInGoogle();
+	  landingPage(loggedUser());
+	  Render.loadPage(loggedUser());
+	};
+
+	let logOut = () => {
+	  User.logOut();
+	  Render.loadPage(loggedUser());
+	};
+
+	let landingPage = (uid) => {
+	  if (uid) {
+	    Firebase.getMovies(uid)
+	    .then(function(movieData){
+	      var idArr = Object.keys(movieData);
+	      idArr.forEach(function (key) {
+	        movieData[key].movieId = key;
+	        userMovies.Search.push(movieData[key]);
+	      });
+	    });
+	  } else {
+	    Render.loadPage(false);
+	  }
+	};
+
+	// Check if someone is logged in (calls loadPage with argument yes or no)
+	Render.loadPage(loggedUser());
+
+	// search(input): use getUser() then call Firebase.searchFirebase(input) if applicable and OpenMovies.getMovies(input), save input, and call signIn something, then call compare(), renderMovies(object, search)
+	let searchAll = function(string){
+	  location = 'search';
+	  OpenMovie.getMovies(string)
+	  .then((movieData) => {
+	    resultOMDb = movieData;
+	  });
+	  searchString = string.toLowerCase();
+	  if (loggedUser()){
+	    // searchResultTracked = Firebase.searchFirebase(string);
+	    for (let i=0; i<userMovies.Search.length; i++){
+	      for (let title in userMovies.Search[i]){
+	        if (userMovies.Search[i].title.toLowerCase().contains(searchString)){
+	          searchResultTracked.Search.push(userMovies.Search[i]);
+	        }
+	      }
+	    }
+	    searchResultAll = compare(resultOMDb, searchResultTracked);
+	  } else {
+	    searchResultAll = resultOMDb;
+	  }
+	  Render.renderMovies(searchResultAll, "search");
+	};
+
+	// showUntracked() run compare and return only results that do not have firebase uid, then call renderMovies(object, untracked)
+	// resultUntracked is empty until we search, so this should display nothing unless first search is performed. As intended.
+	let showUntracked = () => {
+	  location = 'untracked';
+	  Render.renderMovies(resultUntracked, "untracked");
+	};
+
+	// showUnwatched() will call getWatched(false), then call renderMovies(object, unwatched)
+	let showUnwatched = () => {
+	  location = 'unwatched';
+	  let unwatched = {Search: []};
+	  userMovies.Search.forEach(function (el, ind, arr) {
+	    if (!el.watched){
+	      unwatched.Search.push(el);
+	    }
+	  });
+	  Render.renderMovies(unwatched, "unwatched");
+	};
+
+	// showWatched() will call getWatched(true), then call renderMovies(object, watched)
+	let showWatched = () => {
+	  location = 'watched';
+	  let watched = {Search: []};
+	  userMovies.Search.forEach(function (el, ind, arr) {
+	    if (el.watched){
+	      watched.Search.push(el);
+	    }
+	  });
+	  Render.renderMovies(watched, "watched");
+	};
+
+	// showFavorites(), then call renderMovies(object, favorites)
+	let showFavorites = () => {
+	  location = 'favorites';
+	  let fave = {Search: []};
+	  userMovies.Search.forEach(function (el, ind, arr) {
+	    if (parseInt(el.rating) === 10){
+	      fave.Search.push(el);
+	    }
+	  });
+	  Render.renderMovies(fave, "favorites");
+	};
+
+	// AddMovie(movieId) will call getFullMovie(imdbID), call Firebase.addMovie(object), call renderCard(object)
+	let addMovie = (movieId) => {
+	  let tempMovie = OpenMovie.getFullMovies(movieId);
+	  let fullMovie = {
+	    "Year" : tempMovie.Year,
+	    "Actors" : tempMovie.Actors,
+	    "Title" : tempMovie.Title,
+	    "Watched" : false,
+	    "Rating" : 0,
+	    "Poster" : tempMovie.Poster,
+	    "imdbID" : tempMovie.imdbID   
+	  };
+	  Firebase.addMovie(fullMovie);
+	  Render.hideMovie(movieId);
+	  landingPage(loggedUser());
+	  checkLocation(location);
+	  // Render.renderCard(fullMovie);
+	};
+
+	// DeleteMovie(movieId) will call hideMovie(),
+	let deleteMovie = (movieId) => {
+	  Firebase.deleteMovie(movieId);
+	  Render.hideMovie(movieId);
+	};
+
+	// UpdateRating(movieId, rating) will change object then call renderCard(object) with new object
+	// used to add to tracked (with add to watchlist) and add to watched (with rating)
+	let updateMovie = (movieId, rating) => {
+	  let tempMovie = function (ID) {
+	    for (let i = 0; i<userMovies.Search.length; i++){
+	      if (userMovies.Search[i].imdbID === ID){
+	        return userMovies.Search[i];
+	      }
+	    }
+	  };
+	  let fullMovie = {
+	    "Year" : tempMovie.year,
+	    "Actors" : tempMovie.actors,
+	    "Title" : tempMovie.title,
+	    "Watched" : true,
+	    "Rating" : rating,
+	    "Poster" : tempMovie.poster,
+	    "imdbID" : tempMovie.imdbID   
+	  };
+	  Firebase.editMovie(fullMovie, movieId);
+	  let newMovie = Firebase.getMovie(movieId);
+	  landingPage(loggedUser());
+	  checkLocation(location);
+	  // Render.renderCard(newMovie);
+	};
+
+	module.exports = {searchAll,
+	                  showUntracked,
+	                  showWatched,
+	                  showUnwatched,
+	                  showFavorites,
+	                  updateMovie,
+	                  deleteMovie,
+	                  addMovie,
+	                  logIn,
+	                  logOut,
+	                  loggedUser}; // logic functions for controllers
+
 
 /***/ },
 /* 7 */
@@ -466,9 +723,39 @@
 	// Requires
 	__webpack_require__(8);
 
-	let openMovieTestFunction = () => "I was created in the Open Movie file";
+	//let openMovieTestFunction = () => "I was created in the Open Movie file";
 
-	module.exports = {openMovieTestFunction};
+
+	function getMovies(movie) {
+		return  new Promise(function(resolve, reject) {
+			$.ajax ({
+				url: `http://www.omdbapi.com/?s=${movie}&type=movie`,
+			}).done (function(movieData){
+				resolve(movieData);
+			
+			// }).then((movieData) => {
+			// 	return movieData;
+			// });
+
+		});
+	});	
+	}
+
+
+
+	function getFullMovies(imdbID) {
+		return new Promise(function(resolve, reject) {
+			$.ajax ({
+				url: `http://www.omdbapi.com/?i=${imdbID}`
+			}).done (function(movieData){
+				resolve(movieData);
+			});
+		});
+
+	}
+
+
+	module.exports = {getMovies, getFullMovies};
 
 /***/ },
 /* 8 */
@@ -12060,22 +12347,33 @@
 
 	// Requires
 	let $ = __webpack_require__(8),
-		firebase = __webpack_require__(110);
+		firebase = __webpack_require__(109);
 
 	let firebaseTestFunction = () => "I was created in the Firebase file";
+
 
 	// ****************************************
 	// DB interaction using Firebase REST API
 	// ****************************************
 
 
-	// POST - Submits data to be processed to a specified resource. Takes one parameter.
-	function addMovie(movieObj) {
+	function getMovies(user) {
+		return new Promise(function(resolve, reject) {
+			$.ajax ({
+				url: `https://scrappy-eb326.firebaseapp.com/movies.json?orderBy="uid"&equalTo="${user}"`
+			}).done (function(movieData) {
+				resolve(movieData);
+			});
+		});
+	}
+
+	// adds a new movie, in the form of an object, to the collection
+	function addMovie(movieFormObj) {
 		return new Promise(function(resolve, reject) {
 			$.ajax ({
 				url: 'https://scrappy-eb326.firebaseapp.com/movies.json',
 				type: 'POST',
-				data: JSON.stringify(movieObj),
+				data: JSON.stringify(movieFormObj),
 				dataType: 'json'
 			}).done(function(movieID){
 				resolve(movieID);
@@ -12083,54 +12381,9 @@
 		});
 	}
 
-	// GET - Requests/read data from a specified resource
-	function getWatched(watched) {
-		// returns a JSON object with all watched=true or watched=false
-		return new Promise(function(resolve, reject) {
-			$.ajax ({
-				url: `https://scrappy-eb326.firebaseapp.com/movies.json?orderBy="uid"&equalTo="${watched}"`
-			}).done (function(movieData){
-				resolve(movieData);
-			});
-		});
-	}
-
-	function searchFirebase(title) {
-		return new Promise(function(resolve, reject) {
-			$.ajax ({
-				url: `https://scrappy-eb326.firebaseapp.com/movies.json?orderBy="uid"&equalTo="${title}"`
-			}).done (function(movieData){
-				resolve(movieData);
-			});
-		});
-	}
-
-	function getFavorites() {
-		// returns a JSON object with a rating of 10
-		return new Promise(function(resolve, reject) {
-			$.ajax ({
-				url: `https://scrappy-eb326.firebaseapp.com/movies.json?orderBy="uid"&equalTo="${rating}"`
-			}).done (function(movieData) {
-				resolve(movieData);
-			});
-		});
-	}
-
-	// PUT - Update data to a specified resource. Takes two parameters.
-	function updateRating(movieObj) {
-		return new Promise(function(resolve, reject) {
-			$.ajax({
-				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
-				type: 'PUT',
-				data: JSON.stringify(movieObj)
-			}).done(function(data){
-				resolve(data);
-			});
-		});	
-	}
-	// DELETE - Delete data from a specified resource.
-	function removeMovie(movieObj) {
-		console.log("deleteSong" );
+	// POST - Submits data to be processed to a specified resource. Takes one parameter.
+	function deleteMovie(movieId) {
+		console.log("delete Movie");
 		return new Promise(function(resolve, reject) {
 			$.ajax ({
 				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
@@ -12142,9 +12395,41 @@
 	}
 
 
+	// Gets by MovieId
+	function getMovie(movieId) {
+		return new Promise(function(resolve, reject) {
+			$.ajax ({
+				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`
+			}).done(function(movieData) {
+				resolve(movieData);
+			}).fail(function(error){
+				reject(error);
+			});
+		});
+	}
 
-	module.exports = {firebaseTestFunction, getWatched, searchFirebase,
-					  getFavorites, addMovie, removeMovie, updateRating};
+
+	function editMovie(movieFormObj, movieId) {
+		return new Promise(function(resolve, reject) {
+			$.ajax({
+				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
+				type: 'PUT',
+				data: JSON.stringify(movieFormObj)
+			}).done(function(data) {
+				resolve(data);
+			});
+		});
+	}
+
+	module.exports = {
+		firebaseTestFunction,
+		getMovies,
+		addMovie,
+		getMovie,
+		deleteMovie,
+		editMovie
+	};
+
 
 
 
@@ -12152,45 +12437,18 @@
 /* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	// Requires
-	__webpack_require__(8);
-
-	    // Pages To Toggle With "hide" class
-	let sectionHome    = $("#section-Home"),
-	    sectionSearch  = $("#section-Search"),
-	    sectionToWatch = $("#section-ToWatch"),
-	    sectionWatched = $("#section-Watched"),
-	    // Places To Inject Content
-	    homeInject     = $("#homeInject"),
-	    searchInject   = $("#searchInject"),
-	    watchedInject  = $("#watchedInject"),
-	    toWatchInject  = $("#toWatchInject");
-
-	// Test
-	$("#homeInject").html("<p>To get started tracking movies you'd like to watch, sign in at the top right, and then search for a movie name in the search bar above.</p>");
-
-	let viewTestFunction = () => "I was created in the View";
-
-	module.exports = {viewTestFunction};
-
-/***/ },
-/* 110 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
-	let firebase = __webpack_require__(111),
-	    fb = __webpack_require__(112),
+	let firebase = __webpack_require__(110),
+	    fb = __webpack_require__(111),
 	    fbData = fb();
 
+	__webpack_require__(112);
 	__webpack_require__(113);
-	__webpack_require__(114);
 
 	var config = {
 	  apiKey: fbData.apiKey,
-	  authUrl: fbData.authUrl,
+	  authDomain: fbData.authUrl
 	};
 
 	 firebase.initializeApp(config);
@@ -12198,7 +12456,7 @@
 	module.exports = firebase;
 
 /***/ },
-/* 111 */
+/* 110 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*! @license Firebase v3.6.1
@@ -12236,7 +12494,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 112 */
+/* 111 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -12250,14 +12508,11 @@
 
 	module.exports = getKey;
 
-
-
-
 /***/ },
-/* 113 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var firebase = __webpack_require__(111);
+	var firebase = __webpack_require__(110);
 	/*! @license Firebase v3.6.1
 	    Build: 3.6.1-rc.3
 	    Terms: https://firebase.google.com/terms/ */
@@ -12474,10 +12729,10 @@
 
 
 /***/ },
-/* 114 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var firebase = __webpack_require__(111);
+	var firebase = __webpack_require__(110);
 	/*! @license Firebase v3.6.1
 	    Build: 3.6.1-rc.3
 	    Terms: https://firebase.google.com/terms/
@@ -12738,6 +12993,198 @@
 	d;return d.Ya},{Reference:U,Query:X,Database:Se,enableLogging:xc,INTERNAL:Y,TEST_ACCESS:Z,ServerValue:Ve})}catch(Oh){Ac("Failed to register the Firebase Database Service ("+Oh+")")};})();
 
 	module.exports = firebase.database;
+
+
+/***/ },
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	let firebase = __webpack_require__(109),
+		provider = new firebase.auth.GoogleAuthProvider(),
+		currentUser = null;
+
+
+	// Listen for login ir log out actions and set currentUser's value
+	firebase.auth().onAuthStateChanged(function(user) {
+		if(user) {
+			currentUser = user.uid;
+		} else {
+			currentUser = null;
+		}	
+	});
+
+	function logInGoogle() {
+		return firebase.auth().signInWithPopup(provider);
+	}
+
+	function logOut() {
+		return firebase.auth().signOut();
+	}
+
+	function getUser() {
+		return currentUser;
+	}
+
+	module.exports = {logInGoogle, logOut, getUser};
+
+/***/ },
+/* 115 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	// Requires
+	__webpack_require__(8);
+
+	    // Pages elements to toggle with "hide" class
+	let sectionStart     = $("#section-Start"),
+	    sectionSubNav    = $("#section-SubNav"),
+	    sectionSearch    = $("#section-Search"),
+	    sectionUntracked = $("#section-Untracked"),
+	    sectionUnwatched = $("#section-Unwatched"),
+	    sectionWatched   = $("#section-Watched"),
+	    sectionFavorites = $("#section-Favorites"),
+	    // Places to inject content
+	    breadcrumbs      = $("#breadcrumbs"),
+	    searchInject     = $("#searchInject"),
+	    untrackedInject  = $("#untrackedInject"),
+	    unwatchedInject  = $("#unwatchedInject"),
+	    watchedInject    = $("#watchedInject"),
+	    favoritesInject  = $("#favoritesInject"),
+	    // Toggles
+	    showUntracked    = $("#show-untracked"),
+	    showUnwatched    = $("#show-unwatched"),
+	    showWatched      = $("#show-watched"),
+	    showFavorites    = $("#show-favorites"),
+	    // Search field
+	    navSearch        = $("#nav-Search");
+
+	// Display correct data in correct section
+	let renderMovies = (movies, location) => {
+	  switch (location){
+	    case 'search':
+	      searchInject.html("<p>display search stuff here.</p>");
+	      console.log("movies.Search:", movies.Search);
+	      let content = "";
+	      for (let i = 0; i < movies.Search.length; i++) {
+	        content += `
+	          <div id="movie-${movies.Search[i].imdbID}" class="movie col-sm-4 card">
+	            <a id="delete-${movies.Search[i].imdbID}">Delete Card</a><br/>
+	            <img class="movieImage" src="${movies.Search[i].Poster}"/><br/>
+	            <a id="add-${movies.Search[i].imdbID}">Add to Watchlist</a>
+	          </div>
+	        `;
+	      }
+	      searchInject.append(content);
+	      break;
+	    case 'untracked':
+	      console.log("movies:", movies);
+	      untrackedInject.html("<p>display untracked stuff here.</p>")
+	      .append(bundleCard()).append(bundleCard()).append(bundleCard());
+	      break;
+	    case 'unwatched':
+	      console.log("movies:", movies);
+	      unwatchedInject.html("display unwatched stuff here.");
+	      console.log("load unwatched");
+	      break;
+	    case 'watched':
+	      console.log("movies:", movies);
+	      watchedInject.html("display watched stuff here.");
+	      console.log("load watched");
+	      break;
+	    case 'favorites':
+	      console.log("movies:", movies);
+	      favoritesInject.html("display favorites stuff here.");
+	    console.log("load favorites");
+	  }
+	};
+
+	// CHANGE VIEW STATES
+
+	// Search View
+	navSearch.keypress( () => {
+	  removeHelpText();
+	  clearActiveToggle();
+	  hideViewStates();
+	  sectionSearch.removeClass("hide");
+	breadcrumbs.html("<h3>Movie History > Search</h3");
+	});
+
+	// Untracked View
+	showUntracked.click(function() {
+	  removeHelpText();
+	  clearActiveToggle();
+	  showUntracked.parent().addClass("active");
+	  hideViewStates();
+	  sectionUntracked.removeClass("hide");
+	breadcrumbs.html("<h3>Movie History > Show Untracked</h3");
+	});
+
+	// Unwatched View
+	showUnwatched.click(function() {
+	  removeHelpText();
+	  clearActiveToggle();
+	  showUnwatched.parent().addClass("active");
+	  hideViewStates();
+	  sectionUnwatched.removeClass("hide");
+	  breadcrumbs.html("<h3>Movie History > Show Unwatched</h3");
+	});
+
+	// Show Watched
+	showWatched.click(function() {
+	  removeHelpText();
+	  clearActiveToggle();
+	  showWatched.parent().addClass("active");
+	  hideViewStates();
+	  sectionWatched.removeClass("hide");
+	  breadcrumbs.html("<h3>Movie History > Show Watched</h3");
+	});
+
+	// Favorites
+	showFavorites.click(function() {
+	  removeHelpText();
+	  clearActiveToggle();
+	  showFavorites.parent().addClass("active");
+	  hideViewStates();
+	  sectionFavorites.removeClass("hide");
+	  breadcrumbs.html("<h3>Movie History > Favorites</h3");
+	});
+
+	// BASE FUNCTIONS
+
+	// Remove active class on all toggles before adding current one
+	function clearActiveToggle() { $("label").removeClass("active"); }
+
+	// Add hide to all view states
+	function hideViewStates() {
+	  sectionSearch.addClass("hide");
+	  sectionUntracked.addClass("hide");
+	  sectionUnwatched.addClass("hide");
+	  sectionWatched.addClass("hide");
+	  sectionFavorites.addClass("hide");
+	}
+
+	// Remove helper text
+	function removeHelpText() { sectionStart.addClass("hide"); }
+
+	function bundleCard() {
+
+	}
+
+	// Show sectoin-home OR section-unwatched
+	let loadPage = () => "I load a page";
+
+
+
+	// hideMovie(movieID)
+	let hideMovie = () => "I hide a movie";
+
+	// Testing
+	let viewTestFunction = () => "I was created in the View";
+
+	module.exports = {loadPage, renderMovies, hideMovie, viewTestFunction};
+
 
 
 /***/ }
