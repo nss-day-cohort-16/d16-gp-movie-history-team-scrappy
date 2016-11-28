@@ -99,26 +99,28 @@ Render.loadPage(loggedUser());
 
 // search(input): use getUser() then call Firebase.searchFirebase(input) if applicable and OpenMovies.getMovies(input), save input, and call signIn something, then call compare(), renderMovies(object, search)
 let searchAll = function(string){
+  searchResultAll = {Search: []};
   location = 'search';
   OpenMovie.getMovies(string)
   .then((movieData) => {
+console.log("searchAll called omdb with: ", string);
     resultOMDb = movieData;
-  });
-  searchString = string.toLowerCase();
-  if (loggedUser()){
-    // searchResultTracked = Firebase.searchFirebase(string);
-    for (let i=0; i<userMovies.Search.length; i++){
-      for (let title in userMovies.Search[i]){
-        if (userMovies.Search[i].title.toLowerCase().contains(searchString)){
-          searchResultTracked.Search.push(userMovies.Search[i]);
+    searchString = string.toLowerCase();
+    if (loggedUser()){
+      // searchResultTracked = Firebase.searchFirebase(string);
+      for (let i=0; i<userMovies.Search.length; i++){
+        for (let title in userMovies.Search[i]){
+          if (userMovies.Search[i].title.toLowerCase().contains(searchString)){
+            searchResultTracked.Search.push(userMovies.Search[i]);
+          }
         }
       }
+      searchResultAll = compare(resultOMDb, searchResultTracked);
+    } else {
+      searchResultAll = resultOMDb;
     }
-    searchResultAll = compare(resultOMDb, searchResultTracked);
-  } else {
-    searchResultAll = resultOMDb;
-  }
-  Render.renderMovies(searchResultAll, "search");
+    Render.renderMovies(searchResultAll, "search");
+  });
 };
 
 // showUntracked() run compare and return only results that do not have firebase uid, then call renderMovies(object, untracked)
@@ -164,19 +166,22 @@ let showFavorites = () => {
   Render.renderMovies(fave, "favorites");
 };
 
-// AddMovie(movieId) will call getFullMovie(imdbID), call Firebase.addMovie(object), call renderCard(object)
 let addMovie = (movieId) => {
-  let tempMovie = OpenMovie.getFullMovies(movieId);
-  let fullMovie = {
-    "Year" : tempMovie.Year,
-    "Actors" : tempMovie.Actors,
-    "Title" : tempMovie.Title,
+  console.log("addMovie function runs");
+  OpenMovie.getFullMovies(movieId)
+  .then(function(movieData){
+    console.log("movieData in then of AddMovie:", movieData);
+    let fullMovie = {
+    "Year" : movieData.Year,
+    "Actors" : movieData.Actors,
+    "Title" : movieData.Title,
     "Watched" : false,
     "Rating" : 0,
-    "Poster" : tempMovie.Poster,
-    "imdbID" : tempMovie.imdbID   
-  };
-  Firebase.addMovie(fullMovie);
+    "Poster" : movieData.Poster,
+    "imdbID" : movieData.imdbID
+    };
+    Firebase.addMovie(fullMovie);
+  });
   Render.hideMovie(movieId);
   landingPage(loggedUser());
   checkLocation(location);
