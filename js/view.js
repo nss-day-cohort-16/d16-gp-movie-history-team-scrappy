@@ -30,21 +30,26 @@ let sectionStart     = $("#section-Start"),
 let renderMovies = (movies, location) => {
   switch (location){
     case 'search':
-      searchInject.html("display search stuff here.");
+      searchInject.html("<p>display search stuff here.</p>");
+      console.log("movies:", movies);
       break;
     case 'untracked':
-      untrackedInject.html("display untracked stuff here.");
-      console.log("load untracked");
+      console.log("movies:", movies);
+      untrackedInject.html("<p>display untracked stuff here.</p>")
+      .append(bundleCard()).append(bundleCard()).append(bundleCard());
       break;
     case 'unwatched':
+      console.log("movies:", movies);
       unwatchedInject.html("display unwatched stuff here.");
       console.log("load unwatched");
       break;
     case 'watched':
+      console.log("movies:", movies);
       watchedInject.html("display watched stuff here.");
       console.log("load watched");
       break;
     case 'favorites':
+      console.log("movies:", movies);
       favoritesInject.html("display favorites stuff here.");
     console.log("load favorites");
   }
@@ -55,6 +60,10 @@ let renderMovies = (movies, location) => {
 // Search View
 navSearch.keypress( () => {
   removeHelpText();
+  clearActiveToggle();
+  hideViewStates();
+  sectionSearch.removeClass("hide");
+breadcrumbs.html("<h3>Movie History > Search</h3");
 });
 
 // Untracked View
@@ -97,7 +106,7 @@ showFavorites.click(function() {
   breadcrumbs.html("<h3>Movie History > Favorites</h3");
 });
 
-// Base functions
+// BASE FUNCTIONS
 
 // Remove active class on all toggles before adding current one
 function clearActiveToggle() { $("label").removeClass("active"); }
@@ -113,6 +122,15 @@ function hideViewStates() {
 
 // Remove helper text
 function removeHelpText() { sectionStart.addClass("hide"); }
+
+function bundleCard(cardID, image) {
+  return `
+    <div id="cardId" class="col-sm-4 card">
+      <a id="delete-id">Delete Card</a>
+      <img src=""/>
+    </div>
+  `;
+}
 
 // Show sectoin-home OR section-unwatched
 let loadPage = () => "I load a page";
