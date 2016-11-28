@@ -2,7 +2,6 @@
 
 // Requires
 require('jquery');
-let Model = require("./model");
 
     // Pages elements to toggle with "hide" class
 let sectionStart     = $("#section-Start"),
@@ -158,7 +157,6 @@ function bundleCard() {
 
 // Show sectoin-home OR section-unwatched
 let loadPage = () => "I load a page";
-
 
 
 // hideMovie(movieID)

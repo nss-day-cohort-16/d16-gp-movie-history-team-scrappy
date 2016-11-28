@@ -61,11 +61,11 @@
 	    showWatched    = $("#show-watched"),
 	    showFavorites  = $("#show-favorites");
 	    console.log("it's working");
-	           
+
 	navLogIn.click(function(event) {
 	 console.log("you clicked the login button",event );
 	 model.logIn();
-	 
+
 	 });
 	navLogOut.click(function(event) {
 	console.log("you clicked the logout button",event );
@@ -82,7 +82,7 @@
 	model.searchAll(searchResult);
 	navSearch.val('');
 
-	}   
+	}
 	});
 
 
@@ -110,8 +110,8 @@
 	});
 
 
-
-
+	// testing
+	model.addMovie("tt0072890");
 
 /***/ },
 /* 1 */
@@ -652,17 +652,27 @@
 
 	// AddMovie(movieId) will call getFullMovie(imdbID), call Firebase.addMovie(object), call renderCard(object)
 	let addMovie = (movieId) => {
-	  let tempMovie = OpenMovie.getFullMovies(movieId);
-	  let fullMovie = {
-	    "Year" : tempMovie.Year,
-	    "Actors" : tempMovie.Actors,
-	    "Title" : tempMovie.Title,
+
+	  console.log("addMovie function runs");
+
+	  OpenMovie.getFullMovies(movieId)
+	  .then(function(movieData){
+	    console.log("movieData in then of AddMovie:", movieData);
+	    let fullMovie = {
+	    "Year" : movieData.Year,
+	    "Actors" : movieData.Actors,
+	    "Title" : movieData.Title,
 	    "Watched" : false,
 	    "Rating" : 0,
-	    "Poster" : tempMovie.Poster,
-	    "imdbID" : tempMovie.imdbID   
-	  };
-	  Firebase.addMovie(fullMovie);
+	    "Poster" : movieData.Poster,
+	    "imdbID" : movieData.imdbID
+	    };
+
+	    Firebase.addMovie(fullMovie);
+
+	  });
+
+
 	  Render.hideMovie(movieId);
 	  landingPage(loggedUser());
 	  checkLocation(location);
@@ -692,7 +702,7 @@
 	    "Watched" : true,
 	    "Rating" : rating,
 	    "Poster" : tempMovie.poster,
-	    "imdbID" : tempMovie.imdbID   
+	    "imdbID" : tempMovie.imdbID
 	  };
 	  Firebase.editMovie(fullMovie, movieId);
 	  let newMovie = Firebase.getMovie(movieId);
@@ -732,13 +742,13 @@
 				url: `http://www.omdbapi.com/?s=${movie}&type=movie`,
 			}).done (function(movieData){
 				resolve(movieData);
-			
+
 			// }).then((movieData) => {
 			// 	return movieData;
 			// });
 
 		});
-	});	
+	});
 	}
 
 
@@ -756,6 +766,7 @@
 
 
 	module.exports = {getMovies, getFullMovies};
+
 
 /***/ },
 /* 8 */
@@ -12360,7 +12371,7 @@
 	function getMovies(user) {
 		return new Promise(function(resolve, reject) {
 			$.ajax ({
-				url: `https://scrappy-eb326.firebaseapp.com/movies.json?orderBy="uid"&equalTo="${user}"`
+				url: `https://scrappy-eb326.firebaseio.com/movies.json?orderBy="uid"&equalTo="${user}	"`
 			}).done (function(movieData) {
 				resolve(movieData);
 			});
@@ -12369,9 +12380,11 @@
 
 	// adds a new movie, in the form of an object, to the collection
 	function addMovie(movieFormObj) {
+		console.log("movie object before promise", movieFormObj);
 		return new Promise(function(resolve, reject) {
+			console.log("movie object after promise", movieFormObj);
 			$.ajax ({
-				url: 'https://scrappy-eb326.firebaseapp.com/movies.json',
+				url: 'https://scrappy-eb326.firebaseio.com/movies.json',
 				type: 'POST',
 				data: JSON.stringify(movieFormObj),
 				dataType: 'json'
@@ -12386,7 +12399,7 @@
 		console.log("delete Movie");
 		return new Promise(function(resolve, reject) {
 			$.ajax ({
-				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
+				url: `https://scrappy-eb326.firebaseio.com/movies/${movieId}.json`,
 				method: "DELETE"
 			}).done(function() {
 				resolve();
@@ -12399,7 +12412,7 @@
 	function getMovie(movieId) {
 		return new Promise(function(resolve, reject) {
 			$.ajax ({
-				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`
+				url: `https://scrappy-eb326.firebaseio.com/movies/${movieId}.json`
 			}).done(function(movieData) {
 				resolve(movieData);
 			}).fail(function(error){
@@ -12412,7 +12425,7 @@
 	function editMovie(movieFormObj, movieId) {
 		return new Promise(function(resolve, reject) {
 			$.ajax({
-				url: `https://scrappy-eb326.firebaseapp.com/movies/${movieId}.json`,
+				url: `https://scrappy-eb326.firebaseio.com/movies/${movieId}.json`,
 				type: 'PUT',
 				data: JSON.stringify(movieFormObj)
 			}).done(function(data) {
@@ -13070,12 +13083,28 @@
 	      for (let i = 0; i < movies.Search.length; i++) {
 	        content += `
 	          <div id="movie-${movies.Search[i].imdbID}" class="movie col-sm-4 card">
-	            <a id="delete-${movies.Search[i].imdbID}">Delete Card</a><br/>
+	            <a id="delete-${movies.Search[i].imdbID}" href="#">Delete Card</a><br/>
 	            <img class="movieImage" src="${movies.Search[i].Poster}"/><br/>
 	            <a id="add-${movies.Search[i].imdbID}">Add to Watchlist</a>
 	          </div>
 	        `;
+
+	        // Event Listeners for each add button
+	        /*jshint loopfunc: true */
+	        // let target = `"#add-${movies.Search[i].imdbID}"`;
+
+
+
+
 	      }
+	        // $(document).on( "click", "#add-tt0072890", function() {
+	        //   console.log("you clicked the first dog movie");
+	        //   Model.addMovie("tt0072890");
+	        // });
+
+
+
+
 	      searchInject.append(content);
 	      break;
 	    case 'untracked':
@@ -13168,13 +13197,13 @@
 	// Remove helper text
 	function removeHelpText() { sectionStart.addClass("hide"); }
 
+
 	function bundleCard() {
 
 	}
 
 	// Show sectoin-home OR section-unwatched
 	let loadPage = () => "I load a page";
-
 
 
 	// hideMovie(movieID)
@@ -13184,7 +13213,6 @@
 	let viewTestFunction = () => "I was created in the View";
 
 	module.exports = {loadPage, renderMovies, hideMovie, viewTestFunction};
-
 
 
 /***/ }
