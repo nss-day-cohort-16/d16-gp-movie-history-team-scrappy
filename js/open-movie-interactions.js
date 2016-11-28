@@ -12,23 +12,25 @@ function getMovies(movie) {
 			url: `http://www.omdbapi.com/?s=${movie}&type=movie`,
 		}).done (function(movieData){
 			resolve(movieData);
-		
+
 		// }).then((movieData) => {
 		// 	return movieData;
 		// });
 
 	});
-});	
+});
 }
 
 
 
 function getFullMovies(imdbID) {
+	console.log("id in getFullMovies:", imdbID);
 	return new Promise(function(resolve, reject) {
 		$.ajax ({
 			url: `http://www.omdbapi.com/?i=${imdbID}`
 		}).done (function(movieData){
 			resolve(movieData);
+			console.log("movieData:", movieData);
 		});
 	});
 
