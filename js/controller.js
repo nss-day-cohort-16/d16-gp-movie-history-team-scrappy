@@ -1,24 +1,67 @@
 'use strict';
 
 // Requires
-require("./favicon");
-require("../sass/style.scss");
-let Model = require("./model");
+let fav = require("./favicon");
+let sass = require("../sass/style.scss");
+let model = require("./model");
 
-    // Input Elements
-let navSearch      = $("#nav-Search"),
-    navToWatch     = $("#nav-ToWatch"),
-    //link elements
-    navSignUp      = $("#nav-SignUp"),
+        // Input Elements
+let navSearch   = $("#nav-Search"), //keypress event
+    addToWatchList = $("#add-toWatch"),
     navLogIn       = $("#nav-LogIn"),
     navLogOut      = $("#nav-LogOut"),
-    showTracked    = $("show-tracked"),
-    showWatched    = $("show-watched"),
-    // buttons
-    searchOmdb     = $("search-omdb"),
-    searchFb       = $("search-fb");
+    showUntracked  = $("#show-untracked"),
+    showUnwatched  = $("#show-unwatched"),
+    showWatched    = $("#show-watched"),
+    showFavorites  = $("#show-favorites");
+    console.log("it's working");
+           
+navLogIn.click(function(event) {
+ console.log("you clicked the login button",event );
+ model.logIn();
+ 
+ });
+navLogOut.click(function(event) {
+console.log("you clicked the logout button",event );
+model.logOut();
 
-// Call needed functions in Model based on inputs
+});
 
-let test = Model.ModeltestFunction();
-console.log("From Controller:", test);
+navSearch.keypress(function(event) {
+// console.log("you clicked the search keypress", event);
+if(event.keyCode === 13) {
+
+let searchResult = navSearch.val();
+console.log("searchResult", searchResult);
+model.searchAll(searchResult);
+navSearch.val('');
+
+}   
+});
+
+
+//listening to 4 toggle options
+showUntracked.click(function(event) {
+console.log("you clicked show untracked ",event );
+model.showUntracked();
+});
+
+showUnwatched.click(function(event) {
+console.log("you clicked show unwatched",event );
+
+model.showUnwatched();
+});
+showWatched.click(function(event) {
+console.log("you clicked show watched",event );
+
+model.showWatched();
+});
+
+showFavorites.click(function(event) {
+console.log("click event for showFavorites",event );
+
+model.showFavorites();
+});
+
+
+
