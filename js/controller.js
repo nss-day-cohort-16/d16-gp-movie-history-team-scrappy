@@ -13,20 +13,10 @@ let navSearch   = $("#nav-Search"), //keypress event
     showUntracked  = $("#show-untracked"),
     showUnwatched  = $("#show-unwatched"),
     showWatched    = $("#show-watched"),
-    showFavorites  = $("#show-favorites"),
-    register       = $("#nav-SignUp");
-      
+    showFavorites  = $("#show-favorites");
     console.log("it's working");
-     
-
-
- register.click(function(event) {
- console.log("you clicked the register button",event );
- model.register();
- 
- });
-      
- navLogIn.click(function(event) {
+           
+navLogIn.click(function(event) {
  console.log("you clicked the login button",event );
  model.logIn();
  
