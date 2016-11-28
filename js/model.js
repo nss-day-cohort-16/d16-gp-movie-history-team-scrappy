@@ -168,12 +168,12 @@ let showFavorites = () => {
 let addMovie = (movieId) => {
   let tempMovie = OpenMovie.getFullMovies(movieId);
   let fullMovie = {
-    "year" : tempMovie.Year,
-    "actors" : tempMovie.Actors,
-    "title" : tempMovie.Title,
-    "watched" : false,
-    "rating" : 0,
-    "poster" : tempMovie.Poster,
+    "Year" : tempMovie.Year,
+    "Actors" : tempMovie.Actors,
+    "Title" : tempMovie.Title,
+    "Watched" : false,
+    "Rating" : 0,
+    "Poster" : tempMovie.Poster,
     "imdbID" : tempMovie.imdbID   
   };
   Firebase.addMovie(fullMovie);
@@ -200,12 +200,12 @@ let updateMovie = (movieId, rating) => {
     }
   };
   let fullMovie = {
-    "year" : tempMovie.year,
-    "actors" : tempMovie.actors,
-    "title" : tempMovie.title,
-    "watched" : true,
-    "rating" : rating,
-    "poster" : tempMovie.poster,
+    "Year" : tempMovie.year,
+    "Actors" : tempMovie.actors,
+    "Title" : tempMovie.title,
+    "Watched" : true,
+    "Rating" : rating,
+    "Poster" : tempMovie.poster,
     "imdbID" : tempMovie.imdbID   
   };
   Firebase.editMovie(fullMovie, movieId);
